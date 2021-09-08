@@ -3,13 +3,17 @@
 {% block content %}
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
+        {{ image_form.as_p }}
         <button type="submit">Upload</button>
     </form>
 
-    {% if img_obj %}
-        <h3>Successfully uploaded : {{ img_obj.title }}</h3>
-        <img src="{{ img_obj.image.url }}">
+    {% if img_model_obj %}
+        <h3>Successfully uploaded</h3>
+        <img src="{{ img_model_obj.image.url }}">
+
+        <h3>Number of pixels of the selected color: {{ color_count }}</h3>
+
+
     {% endif %}
 
 {% endblock %}

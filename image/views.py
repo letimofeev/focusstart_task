@@ -1,34 +1,41 @@
 from django.shortcuts import render
-from .forms import ImageForm
+
 from image.handlers.image import ImageHandler
+from .forms import (
+    ImageForm,
+)
 
 
 def index(request):
     """Process images uploaded by users"""
     if request.method == 'POST':
-        form = ImageForm(request.POST, request.FILES)
+        image_form = ImageForm(request.POST, request.FILES)
 
-        if form.is_valid():
-            form.save()
+        if image_form.is_valid():
+            image_form.save()
+            color = image_form.cleaned_data['color']
+
             # Get the current instance object to display in the template
-            img_obj = form.instance
+            img_model_obj = image_form.instance
+            img_obj = ImageHandler(img_model_obj.image.name)
 
-            ImageHandler(img_obj.image.name)
+            color_count = img_obj.color_counter(color)
 
             return render(
                 request,
                 'index.html',
                 context={
-                    'form': form,
-                    'img_obj': img_obj
+                    'image_form': image_form,
+                    'img_model_obj': img_model_obj,
+                    'color_count': color_count,
                 }
             )
     else:
-        form = ImageForm()
+        image_form = ImageForm()
 
     return render(
         request,
         'index.html',
-        context={'form': form}
+        context={'image_form': image_form}
     )
 

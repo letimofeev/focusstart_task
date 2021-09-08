@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .forms import ImageForm
+from image.handlers.image import ImageHandler
 
 
 def index(request):
@@ -11,6 +12,8 @@ def index(request):
             form.save()
             # Get the current instance object to display in the template
             img_obj = form.instance
+
+            ImageHandler(img_obj.image.name)
 
             return render(
                 request,
@@ -26,5 +29,6 @@ def index(request):
     return render(
         request,
         'index.html',
-        context={'form': form})
+        context={'form': form}
+    )
 
